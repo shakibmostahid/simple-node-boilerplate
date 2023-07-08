@@ -1,0 +1,27 @@
+version: '3.7'
+
+networks:
+  mygp-net:
+    external: true
+  common-net:
+     external: true
+
+services:
+
+  app:
+    image: ${COMPOSE_PROJECT_NAME}_app:${DOCKER_BUILD_MODE}
+    build:
+      context: ${DOCKER_BUILD_CONTEXT_DIR}
+      dockerfile: docker/app/Dockerfile
+      args:
+        - HTTP_PROXY=${APP_HTTP_PROXY}
+        - HTTPS_PROXY=${APP_HTTPS_PROXY}
+        - NO_PROXY=${APP_NO_PROXY}
+    restart: always
+    environment:
+      - CONTAINER_ROLE=app
+    networks:
+      default:
+      mygp-net:
+        aliases:
+          - sample_project

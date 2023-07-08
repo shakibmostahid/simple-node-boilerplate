@@ -1,0 +1,10 @@
+git version: '3.7'
+
+services:
+
+  app:
+    env_file:
+      - .envs/app.env
+    command: ["npm", "run", "dev"]
+    volumes:
+      - ${DOCKER_VOLUME_CODES_ROOT_DIR}:/usr/src/app
