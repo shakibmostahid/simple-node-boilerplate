@@ -1,0 +1,41 @@
+version: '3.7'
+
+networks:
+  default:
+    driver: ${NETWORKS_DRIVER}
+  mygp-net:
+    external: true
+  common-net:
+    external: true
+
+volumes:
+  receiving_service_node_modules:
+    driver: local
+  # mygp-rabbitmq-connection-store:
+  #   external: true
+
+services:
+
+  app:
+    env_file:
+      - .envs/app.env
+    command: ["npm", "run", "dev"]
+    volumes:
+      - ${DOCKER_VOLUME_CODES_ROOT_DIR}:/usr/src/app
+      - receiving_service_node_modules:/usr/src/app/node_modules/
+    networks:
+      default:
+      common-net:
+        aliases:
+          - receiving_service_common
+
+  # rabbitmq-connection:
+  #   image: rabbitmq-connection:3.8.3
+  #   volumes:
+  #     - mygp-rabbitmq-connection-store:/var/lib/rabbitmq-connection
+  #   env_file:
+  #     - .envs/rabbitmq-connection.env
+  #   networks:
+  #     mygp-net:
+  #       aliases:
+  #         - rabbitmq-connection
